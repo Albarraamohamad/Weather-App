@@ -16,7 +16,7 @@ const ApiWeather = () => {
 
   useEffect(() => {
     fetchWeather();
-  }, [city]); // يتم التحديث عند تغيير المدينة
+  }, [city]);
 
   const fetchWeather = async () => {
     setLoading(true);
@@ -25,9 +25,14 @@ const ApiWeather = () => {
         `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=no`
       );
       const data = await response.json();
-      setWeather(data);
+      if (data?.location && data?.current) {
+        setWeather(data);
+      } else {
+        setWeather(null);
+      }
     } catch (error) {
       console.error("Error fetching weather data:", error);
+      setWeather(null);
     }
     setLoading(false);
   };
@@ -135,13 +140,13 @@ const ApiWeather = () => {
               ) : weather ? (
                 <div className="mt-5 bg-white shadow-md rounded-xl p-6 flex flex-col items-center">
                   <h2 className="text-2xl font-bold text-blue-600">
-                    {weather.location.name}, {weather.location.country}
+                    {weather?.location?.name}, {weather?.location?.country}
                   </h2>
                   <p className="text-lg">
-                    {weather.current.temp_c}°C - {weather.current.condition.text}
+                    {weather?.current?.temp_c}°C - {weather?.current?.condition?.text}
                   </p>
                   <img
-                    src={weather.current.condition.icon}
+                    src={weather?.current?.condition?.icon}
                     alt="Weather icon"
                     className="w-20 h-20"
                   />
@@ -149,17 +154,16 @@ const ApiWeather = () => {
                   {/* Weather Cards */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 w-full">
                     {[
-                      { label: "Humidity", value: `${weather.current.humidity}%` },
-                      { label: "Wind", value: `${weather.current.wind_kph} km/h` },
-                      { label: "Precipitation", value: `${weather.current.precip_mm} mm` },
-                      { label: "Feels Like", value: `${weather.current.feelslike_c}°C` },
+                      { label: "Humidity", value: `${weather?.current?.humidity}%` },
+                      { label: "Wind", value: `${weather?.current?.wind_kph} km/h` },
+                      { label: "Precipitation", value: `${weather?.current?.precip_mm} mm` },
+                      { label: "Feels Like", value: `${weather?.current?.feelslike_c}°C` },
                     ].map((item) => (
                       <div
                         key={item.label}
                         className="p-4 rounded-lg shadow-md text-white text-center transition transform hover:-translate-y-2 duration-500 cursor-pointer"
                         style={{
-                          background:
-                            "linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%)",
+                          background: "linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%)",
                         }}
                       >
                         <p className="text-lg font-semibold">{item.label}</p>
@@ -169,7 +173,7 @@ const ApiWeather = () => {
                   </div>
                 </div>
               ) : (
-                <p className="text-center mt-5">No weather data available.</p>
+                <p className="text-center mt-5 text-red-500">No weather data available.</p>
               )}
             </>
           )}
