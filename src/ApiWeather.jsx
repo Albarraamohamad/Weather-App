@@ -16,7 +16,7 @@ const ApiWeather = () => {
 
   useEffect(() => {
     fetchWeather();
-  }, []);
+  }, [city]); // يتم التحديث عند تغيير المدينة
 
   const fetchWeather = async () => {
     setLoading(true);
@@ -156,7 +156,7 @@ const ApiWeather = () => {
                     ].map((item) => (
                       <div
                         key={item.label}
-                        className="p-4 rounded-lg shadow-md text-white text-center transition transform hover:-translate-y-2 duration-500 cursor-pointernp"
+                        className="p-4 rounded-lg shadow-md text-white text-center transition transform hover:-translate-y-2 duration-500 cursor-pointer"
                         style={{
                           background:
                             "linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%)",
