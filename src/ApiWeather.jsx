@@ -22,7 +22,7 @@ const ApiWeather = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=no`
+        `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=no`
       );
       const data = await response.json();
       setWeather(data);
